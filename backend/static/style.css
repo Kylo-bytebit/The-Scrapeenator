@@ -1,0 +1,66 @@
+body { 
+    text-align: center; 
+    font-family: Arial, sans-serif; 
+    background-color: #C0C0C0; 
+    padding: 0%;
+    margin: 0%;
+}
+
+
+nav {
+border: 1px solid #2c2c2c;
+height: 35px;
+display: flex;
+align-items: center;
+background: #1c1c1c;
+}
+
+#title{
+    user-select: none;
+    font-size: 25px;
+    margin-left: 10px;
+    -webkit-app-region: drag;
+    color: white;
+    margin-top: 3.2vh;
+}
+
+form button { 
+    padding: 10px; 
+    font-size: 16px; 
+}
+
+::-webkit-scrollbar{
+    display: none;
+}
+
+
+:not(nav){
+    -webkit-app-region:no-drag;
+}
+
+.nav-buttons{
+    margin-left: auto;
+    display: flex;
+}
+.form-control{
+    border-color: rgb(23, 23, 23);
+}
+
+.nav-buttons > button {
+    transition: background .2s ease;
+    background: #1c1c1c;
+    border: none;
+    height: 100%;
+    margin: 0;
+    aspect-ratio: 1;
+    color: #ededed;
+    font-size: 17px;
+  }
+  .nav-buttons > button:hover {
+    transition: .2s ease;
+    background: #2c2c2c;
+    cursor: pointer;
+  }
+  .nav-buttons > button:active {
+    background: #4c4c4c;
+  }

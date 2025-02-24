@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ScrapeeNator</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://kit.fontawesome.com/879db3f70a.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <nav style="-webkit-app-region: drag">
+        <p id="title"> Scrapeenator</p>
+        <div class="nav-buttons">
+            <button id="minimize"><i class="fa-solid fa-window-minimize"></i></button>
+            <button id="maximize"><i class="fa-solid fa-window-maximize"></i></button>
+            <button id="close"><i class="fa-solid fa-xmark"></i></button>
+
+        </div>
+    </nav>
+    <div class="container text-center">
+        <h1 class="mt-5">ScrapeeNator</h1>
+        <form id="scrapeForm" class="mt-4">
+            <div class="form-group">
+                <label for="url">Enter a URL:</label>
+              </div>  
+              <div class="text-center col-3 mx-auto mb-1">
+                <input type="text" class="form-control" id="url" name="url" required>
+              </div>
+            <div class="form-group">
+                <label for="tag">Enter Tag:</label>
+            </div>
+            <div class="text-center col-3 mx-auto">
+                <input type="text" class="form-control" id="tag" name="tag" required>
+            </div>
+            <div class="form-group">
+                <label for="attributes">Enter Attributes/Class:</label>
+            </div>
+            <div class="text-center col-3 mx-auto">
+                <input type="text" class="form-control" id="attributes" name="attributes" required>
+            </div>
+            <button type="submit" class="btn btn-primary mt-3">Scrape</button>
+        </form>
+        <button type="button" class="btn btn-secondary mt-2" id="downloadCsv">Download CSV</button>
+        <div class="mt-4"><h2>Results</h2></div>
+        <div class="mt-4 border border-dark rounded p-2 mb-1" style="background-color: white;">
+                <pre id="results"></pre>
+            <pre id="results"></pre>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('scrapeForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const url = document.getElementById('url').value;
+            const tag = document.getElementById('tag').value;
+            const attributes = document.getElementById('attributes').value;
+
+            fetch('/api/scrape', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ url, tag, attributes })
+            })
+            .then(response => response.json())
+            .then(data => {
+                const results = document.getElementById('results');
+                results.textContent = JSON.stringify(data, null, 2);
+            })
+            .catch(error => console.error('Error:', error));
+        });
+
+        document.getElementById('downloadCsv').addEventListener('click', function() {
+            const url = document.getElementById('url').value;
+            const tag = document.getElementById('tag').value;
+            const attributes = document.getElementById('attributes').value;
+
+            fetch('/api/scrape/csv', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ url, tag, attributes })
+            })
+            .then(response => response.blob())
+            .then(blob => {
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.style.display = 'none';
+                a.href = url;
+                a.download = 'scraped_data.csv';
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    </script>
+
+    <script src="{{ url_for('static', filename='scripts.js') }}"></script>
+</body>
+</html>
